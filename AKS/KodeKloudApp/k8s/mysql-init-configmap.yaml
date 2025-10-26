@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-script
+  namespace: xnet
+data:
+  init.sql: |
+    -- Create database if not exists
+    CREATE DATABASE IF NOT EXISTS foobar;
+    
+    -- Create user if not exists and grant all privileges
+    CREATE USER IF NOT EXISTS 'appuser'@'%' IDENTIFIED BY 'dbpass123';
+    GRANT ALL PRIVILEGES ON foobar.* TO 'appuser'@'%';
+    FLUSH PRIVILEGES;
+    
+    -- Use the database
+    USE foobar;
+    
+    -- Create Users table if not exists
+    CREATE TABLE IF NOT EXISTS Users (
+      Id INT AUTO_INCREMENT PRIMARY KEY,
+      FirstName VARCHAR(100) NOT NULL,
+      LastName VARCHAR(100) NOT NULL,
+      Email VARCHAR(255) NOT NULL UNIQUE,
+      CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      IsActive BOOLEAN DEFAULT TRUE
+    );

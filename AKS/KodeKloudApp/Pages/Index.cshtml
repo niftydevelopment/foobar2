@@ -1,0 +1,110 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to KodeKloud App</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>System Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Message:</strong> @Model.Messsage</p>
+                    <p><strong>System name:</strong> @Environment.MachineName</p>
+                    <p><strong>IP address:</strong> @Model.IPAddress</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Database Status</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Status:</strong> 
+                        @if (Model.DatabaseStatus == "Connected")
+                        {
+                            <span class="badge bg-success">@Model.DatabaseStatus</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@Model.DatabaseStatus</span>
+                        }
+                    </p>
+                    <p><strong>Total Users:</strong> @Model.UserCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success mt-3" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger mt-3" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="mt-4">
+        <form method="post" asp-page-handler="CreateUser">
+            <button type="submit" class="btn btn-primary">Create Random User</button>
+        </form>
+    </div>
+
+    @if (Model.Users.Any())
+    {
+        <div class="mt-4">
+            <h3>Users in Database</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Created At</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge bg-success">Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
