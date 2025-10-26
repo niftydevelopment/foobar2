@@ -15,8 +15,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 0))));
 
+// Add Xnet Entity Framework
+builder.Services.AddDbContext<XnetDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("XnetConnection"),
+        new MySqlServerVersion(new Version(8, 0, 0))));
+
 // Add services
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<XnetUserService>();
 
 var app = builder.Build();
 

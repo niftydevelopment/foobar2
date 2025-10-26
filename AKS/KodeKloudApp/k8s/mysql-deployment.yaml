@@ -27,7 +27,7 @@ data:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc
+  name: mysql-pvc2
   namespace: xnet
 spec:
   accessModes:
@@ -39,19 +39,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: my-app-db
   namespace: xnet
   labels:
-    app: mysql
+    app: my-app-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: my-app-db
   template:
     metadata:
       labels:
-        app: mysql
+        app: my-app-db
     spec:
       containers:
       - name: mysql
@@ -92,16 +92,16 @@ spec:
       volumes:
       - name: mysql-storage
         persistentVolumeClaim:
-          claimName: mysql-pvc
+          claimName: mysql-pvc2
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: my-app-db-service
   namespace: xnet
 spec:
   selector:
-    app: mysql
+    app: my-app-db
   ports:
     - protocol: TCP
       port: 3306

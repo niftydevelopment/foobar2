@@ -1,0 +1,121 @@
+@page
+@model KodeKloudApp.Pages.XnetUsersModel
+@{
+    ViewData["Title"] = "Xnet Users";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Xnet Users Management</h1>
+    <p>Manage users in the Xnet database</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Database Status</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Status:</strong> 
+                        @if (Model.DatabaseStatus == "Connected")
+                        {
+                            <span class="badge bg-success">@Model.DatabaseStatus</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@Model.DatabaseStatus</span>
+                        }
+                    </p>
+                    <p><strong>Total Users:</strong> @Model.UserCount</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Add New User</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="CreateUser">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="FirstName" placeholder="First Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="LastName" placeholder="Last Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="CountryCode" placeholder="Country Code (e.g., SE)" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="NationalNumber" placeholder="National Number" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" name="Email" placeholder="Email (optional)">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success mt-3" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger mt-3" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Users.Any())
+    {
+        <div class="mt-4">
+            <h3>Xnet Users</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Country</th>
+                            <th>National Number</th>
+                            <th>Email</th>
+                            <th>Created At</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.Id.Substring(0, 8)...</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName</td>
+                                <td>@user.CountryCode</td>
+                                <td>@user.NationalNumber</td>
+                                <td>@(user.Email ?? "N/A")</td>
+                                <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@(user.LastLoginAt?.ToString("yyyy-MM-dd HH:mm") ?? "Never")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mt-4">
+            <div class="alert alert-info" role="alert">
+                No users found in the Xnet database.
+            </div>
+        </div>
+    }
+</div>
